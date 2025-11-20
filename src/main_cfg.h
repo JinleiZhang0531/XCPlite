@@ -79,13 +79,13 @@
 
 // Enable EPK calibration segment to check HEX/BIN file compatibility
 // If the EPK is included in the HEX/BIN file, the version of the data structure can be checked using the EPK address specified in the A2L file
-#define OPTION_CAL_SEGMENT_EPK
+// #define OPTION_CAL_SEGMENT_EPK
 
 // Enable absolute addressing for calibration segments
 // Default is segment relative addressing, uses address extension 0 for segment relative and 1 for absolute and encodes the segment number in the address high word
 // As this is not compatible to most well known tools to update, modify and create A2L files, this option switches to absolute addressing on address extension 0
 // Requirement is, that the address of all reference pages must be stable and in address range of 0x0000_0000 to 0xFFFF_FFFF
-// #define OPTION_CAL_SEGMENTS_ABS
+#define OPTION_CAL_SEGMENTS_ABS
 
 // Enable persistence (freeze) to reference page or to working page on next application restart
 // This decides which pages (reference/FLASH or working/RAM) are stored to the calibration segment binary file (.BIN) on XCP freeze request

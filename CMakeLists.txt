@@ -1,6 +1,9 @@
 
 cmake_minimum_required(VERSION 3.10)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gdwarf-4")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gdwarf-4")
+
 # Compiler selection options (must be set before project() call)
 option(USE_CLANG "Use clang/clang++ compiler" OFF)
 option(USE_GCC "Use gcc/g++ compiler" OFF)
@@ -252,22 +255,22 @@ else()
     target_link_libraries(multi_thread_demo PRIVATE m)
     target_link_libraries(hello_xcp_cpp PRIVATE m)
 
-    # Set .out suffix for executables on non-Windows platforms
-    set_target_properties(hello_xcp PROPERTIES SUFFIX ".out")
-    set_target_properties(no_a2l_demo PROPERTIES SUFFIX ".out")
-    set_target_properties(hello_xcp_cpp PROPERTIES SUFFIX ".out")
-    set_target_properties(c_demo PROPERTIES SUFFIX ".out")
-    set_target_properties(cpp_demo PROPERTIES SUFFIX ".out")
-    set_target_properties(struct_demo PROPERTIES SUFFIX ".out")
-    set_target_properties(multi_thread_demo PROPERTIES SUFFIX ".out")
-    set_target_properties(bpf_demo PROPERTIES SUFFIX ".out")
+    # Set .elf suffix for executables on non-Windows platforms
+    set_target_properties(hello_xcp PROPERTIES SUFFIX ".elf")
+    set_target_properties(no_a2l_demo PROPERTIES SUFFIX ".elf")
+    set_target_properties(hello_xcp_cpp PROPERTIES SUFFIX ".elf")
+    set_target_properties(c_demo PROPERTIES SUFFIX ".elf")
+    set_target_properties(cpp_demo PROPERTIES SUFFIX ".elf")
+    set_target_properties(struct_demo PROPERTIES SUFFIX ".elf")
+    set_target_properties(multi_thread_demo PROPERTIES SUFFIX ".elf")
+    set_target_properties(bpf_demo PROPERTIES SUFFIX ".elf")
     
     if(BUILD_TEST)
-        set_target_properties(type_detection_test_c PROPERTIES SUFFIX ".out")
-        set_target_properties(type_detection_test_cpp PROPERTIES SUFFIX ".out")
-        set_target_properties(a2l_test PROPERTIES SUFFIX ".out")
-        set_target_properties(cal_test PROPERTIES SUFFIX ".out")
-        set_target_properties(daq_test PROPERTIES SUFFIX ".out")
+        set_target_properties(type_detection_test_c PROPERTIES SUFFIX ".elf")
+        set_target_properties(type_detection_test_cpp PROPERTIES SUFFIX ".elf")
+        set_target_properties(a2l_test PROPERTIES SUFFIX ".elf")
+        set_target_properties(cal_test PROPERTIES SUFFIX ".elf")
+        set_target_properties(daq_test PROPERTIES SUFFIX ".elf")
     endif()
 endif()
 

@@ -85,13 +85,13 @@
             "name": "Debug hello_xcp",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/hello_xcp.out",
+            "program": "${workspaceFolder}/build-gcc/hello_xcp.elf",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "lldb",
+            "MIMode": "gdb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -99,7 +99,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "XCPlite: build hello_xcp"
+            // "preLaunchTask": "XCPlite: build hello_xcp"
         },
         {
             "name": "Debug a2l_test",

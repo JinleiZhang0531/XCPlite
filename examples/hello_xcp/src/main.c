@@ -15,7 +15,7 @@
 
 #define OPTION_PROJECT_NAME "hello_xcp" // Project name, used to build the A2L and BIN file name
 #define OPTION_PROJECT_EPK __TIME__     // EPK version string
-#define OPTION_USE_TCP true             // TCP or UDP
+#define OPTION_USE_TCP false             // TCP or UDP
 #define OPTION_SERVER_PORT 5555         // Port
 #define OPTION_SERVER_ADDR {0, 0, 0, 0} // Bind addr, 0.0.0.0 = ANY
 #define OPTION_QUEUE_SIZE 1024 * 16     // Size of the measurement queue in bytes, must be a multiple of 8
@@ -179,7 +179,7 @@ int main(void) {
         // Local variables
         counter++;
         if (counter > params->counter_max) { // Get the counter_max calibration value and reset counter
-            printf("%u: params.counter_max = %u\n", counter, params->counter_max);
+            // printf("%u: params.counter_max = %u\n", counter, params->counter_max);
             counter = 0;
         }
 
