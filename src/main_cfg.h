@@ -75,7 +75,7 @@
 
 // Enable calibration segment persistence, a binary (.BIN) file is used to store calibration segments
 // This allows to safely build the A2L file only once per build, even if the creation order of events and segments changes
-#define OPTION_CAL_PERSISTENCE
+// #define OPTION_CAL_PERSISTENCE
 
 // Enable EPK calibration segment to check HEX/BIN file compatibility
 // If the EPK is included in the HEX/BIN file, the version of the data structure can be checked using the EPK address specified in the A2L file

@@ -31,6 +31,7 @@ typedefs.a2l
 pi
 dwarf
 .vscode
+.cache
 .DS_Store
 test_bpf_demo_pi.sh
 test_bin2hex_pi.sh

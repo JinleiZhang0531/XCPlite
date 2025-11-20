@@ -32,7 +32,7 @@ typedef struct params {
 } parameters_t;
 
 // Default values (reference page, "FLASH") for the calibration parameters
-const parameters_t params = {.counter_max = 1024, .delay_us = 1000, .flow_rate = 0.300f};
+const parameters_t params = {.counter_max = 1024, .delay_us = 10000, .flow_rate = 0.300f};
 
 // A global calibration segment handle for the calibration parameters
 // A calibration segment has a working page ("RAM") and a reference page ("FLASH"), it is described by a MEMORY_SEGMENT in the A2L file
@@ -50,6 +50,9 @@ uint8_t inside_temperature = 20 + 55;
 double heat_energy = 0.0f;
 // A global counter limited by the calibration parameter counter_max
 uint32_t global_counter = 0;
+
+// Counter for controlling calc_power event period (50ms = 5 × 10ms)
+static uint8_t calc_power_counter = 0;
 
 //-----------------------------------------------------------------------------------------------------
 // Read sensor values
@@ -86,8 +89,12 @@ float calc_power(uint8_t t1, uint8_t t2) {
     // XCP: Unlock the calibration segment
     XcpUnlockCalSeg(calseg);
 
-    // XCP: Trigger the measurement event "calc_power"
-    DaqTriggerEvent(calc_power);
+    // XCP: Trigger the measurement event "calc_power" only every 5th call (50ms = 5 × 10ms)
+    calc_power_counter++;
+    if (calc_power_counter >= 5) {
+        calc_power_counter = 0;
+        DaqTriggerEvent(calc_power);
+    }
 
     return (float)heat_power;
 }
@@ -126,7 +133,7 @@ int main(void) {
     //   Binary persistence is not supported
     // Finalize the A2L file on XCP connect
     // Optionally create A2L groups for calibration segments and events
-    if (!A2lInit(addr, OPTION_SERVER_PORT, OPTION_USE_TCP, A2L_MODE_WRITE_ONCE | A2L_MODE_FINALIZE_ON_CONNECT | A2L_MODE_AUTO_GROUPS)) {
+    if (!A2lInit(addr, OPTION_SERVER_PORT, OPTION_USE_TCP, A2L_MODE_WRITE_ALWAYS | A2L_MODE_FINALIZE_ON_CONNECT | A2L_MODE_AUTO_GROUPS)) {
         return 1;
     }
 
@@ -193,10 +200,10 @@ int main(void) {
         // XCP: Unlock the calibration segment
         XcpUnlockCalSeg(calseg);
 
-        // XCP: Trigger the measurement event "mainloop"
+        // XCP: Trigger the measurement event "mainloop" (10ms周期)
         DaqTriggerEvent(mainloop);
 
-        // Sleep for the specified delay parameter in microseconds, don't sleep with the XCP lock held to give the XCP client a chance to update params
+        // Sleep for 10ms (mainloop周期)
         sleepUs(delay_us);
 
         A2lFinalize(); // @@@@ TEST: Manually finalize the A2L file to make it visible without XCP tool connect
