@@ -105,6 +105,7 @@ float calc_power(uint8_t t1, uint8_t t2) {
 static volatile bool running = true;
 static void sig_handler(int sig) { running = false; }
 
+
 int main(void) {
 
     printf("\nXCP on Ethernet hello_xcp C xcplib demo\n");
@@ -184,21 +185,19 @@ int main(void) {
         uint32_t delay_us = params->delay_us; // Get the delay calibration parameter in microseconds
 
         // Local variables
-        counter++;
-        if (counter > params->counter_max) { // Get the counter_max calibration value and reset counter
+        global_counter++;
+        if (global_counter > params->counter_max) { // Get the counter_max calibration value and reset counter
             // printf("%u: params.counter_max = %u\n", counter, params->counter_max);
-            counter = 0;
+            global_counter = 0;
         }
 
-        // Global variables
-        global_counter++;
+        // XCP: Unlock the calibration segment
+        XcpUnlockCalSeg(calseg);
+
         inside_temperature = read_inside_sensor();
         outside_temperature = read_outside_sensor();
         double heat_power = calc_power(outside_temperature, inside_temperature); // Demo function to calculate heat power in W
         heat_energy += heat_power / 1000.0 * (double)delay_us / 3600e6;          // Integrate heat energy in kWh in a global measurement variable, kWh = W/1000  * us/ 3600e6
-
-        // XCP: Unlock the calibration segment
-        XcpUnlockCalSeg(calseg);
 
         // XCP: Trigger the measurement event "mainloop" (10ms周期)
         DaqTriggerEvent(mainloop);
