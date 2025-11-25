@@ -14,11 +14,12 @@
 // XCP parameters
 #define OPTION_PROJECT_NAME "hello_xcp_cpp" // A2L project name
 #define OPTION_PROJECT_EPK __TIME__         // EPK version string
-#define OPTION_USE_TCP true                 // TCP or UDP, use TCP
+#define OPTION_USE_TCP false                // TCP or UDP, use TCP
 #define OPTION_SERVER_PORT 5555             // Port
-#define OPTION_SERVER_ADDR {0, 0, 0, 0}     // Bind addr, 0.0.0.0 = ANY
-#define OPTION_QUEUE_SIZE (1024 * 64)       // Size of the measurement queue in bytes
-#define OPTION_LOG_LEVEL 3                  // Log level, 0 = no log, 1 = error, 2 = warning, 3 = info, 4 = debug
+#define OPTION_SERVER_ADDR                                                                                                                                                         \
+    { 0, 0, 0, 0 }                    // Bind addr, 0.0.0.0 = ANY
+#define OPTION_QUEUE_SIZE (1024 * 64) // Size of the measurement queue in bytes
+#define OPTION_LOG_LEVEL 3            // Log level, 0 = no log, 1 = error, 2 = warning, 3 = info, 4 = debug
 
 //-----------------------------------------------------------------------------------------------------
 // Demo floating average calculation class
@@ -95,7 +96,7 @@ struct ParametersT {
 
 // Default parameter values
 const ParametersT kParameters = {.min = 2.0, .max = 3.0};
-
+ParametersT g_readParameters;
 // A calibration segment wrapper for the parameters
 std::optional<xcplib::CalSeg<ParametersT>> gCalSeg;
 
@@ -106,6 +107,7 @@ double random_number() {
 
     // Lock access to calibration parameters with RAII guard "params"
     auto params = gCalSeg->lock();
+    g_readParameters = *params;
     double random = params->min + ((seed / 65536) % 32768) / 32768.0 * (params->max - params->min);
     return random;
 };
@@ -141,7 +143,7 @@ int main() {
     }
 
     // Enable runtime A2L generation for data declaration as code
-    if (!A2lInit(addr, OPTION_SERVER_PORT, OPTION_USE_TCP, A2L_MODE_WRITE_ONCE | A2L_MODE_FINALIZE_ON_CONNECT | A2L_MODE_AUTO_GROUPS)) {
+    if (!A2lInit(addr, OPTION_SERVER_PORT, OPTION_USE_TCP, A2L_MODE_WRITE_ALWAYS | A2L_MODE_FINALIZE_ON_CONNECT | A2L_MODE_AUTO_GROUPS)) {
         std::cerr << "Failed to initialize A2L generator" << std::endl;
         return 1;
     }

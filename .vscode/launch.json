@@ -5,13 +5,13 @@
             "name": "Debug hello_xcp_cpp",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/hello_xcp_cpp.out",
+            "program": "${workspaceFolder}/build-gcc/hello_xcp_cpp.elf",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "lldb",
+            "MIMode": "gdb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -19,7 +19,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "XCPlite: build hello_xcp_cpp"
+            // "preLaunchTask": "XCPlite: build hello_xcp_cpp"
         },
         {
             "name": "Debug cpp_demo",

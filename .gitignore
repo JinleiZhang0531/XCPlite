@@ -30,7 +30,7 @@ typedefs.a2l
 /run.sh
 pi
 dwarf
-.vscode
+#.vscode
 .cache
 .DS_Store
 test_bpf_demo_pi.sh
