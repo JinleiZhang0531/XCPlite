@@ -122,6 +122,8 @@ void signal_handler(int signal) {
     }
 }
 
+double g_run_time_ms = 0;
+
 int main() {
 
     std::signal(SIGINT, signal_handler);
@@ -181,7 +183,7 @@ int main() {
     while (gRun) {
         counter++;
         double voltage = random_number();
-        double average_voltage = average128->calculate(voltage);
+        // double average_voltage = average128->calculate(voltage);
 
         // Once create event "mainloop" and register measurements for the local variables 'voltage' and 'average_voltage' via event 'mainloop'
         // Trigger the event "mainloop" to measure the local variables
@@ -194,13 +196,14 @@ int main() {
         DaqTriggerEvent(mainloop);
 
         // Optional: Trigger the event "average128" to measure the 'FloatingAverage' heap instance 'average128'
-        DaqTriggerEventExt(average, average128);
+        // DaqTriggerEventExt(average, average128);
 
         uint64_t current_time = clockGetUs();
         uint64_t cycle_time = current_time - last_time;
-        if (counter % 1000 == 0) { // 每 1000 次打印一次
-            printf("Cycle time: %llu us\n", cycle_time);
-        }
+        g_run_time_ms = cycle_time / 1000.0f;
+        // if (counter % 1000 == 0) { // 每 1000 次打印一次
+        //     printf("Cycle time: %llu us\n", cycle_time);
+        // }
         last_time = current_time;
 
         sleepUs(1000);
