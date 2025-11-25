@@ -172,29 +172,38 @@ int main() {
     DaqCreateEvent(average);
     A2lSetRelativeAddrMode(average, average128);
     A2lCreateTypedefReference(average128, FloatingAverage, "Instance average128 of FloatingAverage<128>");
-
+    A2lFinalize(); // @@@@ TEST: Manually finalize the A2L file to make it visible without XCP tool connect
+    XcpCreateEvent("mainloop", 1000000, 0);
     // Main loop
     std::cout << "Starting main loop... (Press Ctrl+C to exit)" << std::endl;
     uint16_t counter = 0;
+    uint64_t last_time = clockGetUs();
     while (gRun) {
-
         counter++;
         double voltage = random_number();
         double average_voltage = average128->calculate(voltage);
 
         // Once create event "mainloop" and register measurements for the local variables 'voltage' and 'average_voltage' via event 'mainloop'
         // Trigger the event "mainloop" to measure the local variables
-        XcpDaqEvent(mainloop,                                                //
-                    (counter, "Mainloop counter"),                           //
-                    (voltage, "Input voltage", "V", 0.0, 1000.0),            //
-                    (average_voltage, "Calculated voltage floating average") //
-        );
+        // XcpDaqEvent(mainloop,                                                //
+        //             (counter, "Mainloop counter"),                           //
+        //             (voltage, "Input voltage", "V", 0.0, 1000.0),            //
+        //             (average_voltage, "Calculated voltage floating average") //
+        // );
+        // 只触发事件，不创建和注册
+        DaqTriggerEvent(mainloop);
 
         // Optional: Trigger the event "average128" to measure the 'FloatingAverage' heap instance 'average128'
         DaqTriggerEventExt(average, average128);
 
+        uint64_t current_time = clockGetUs();
+        uint64_t cycle_time = current_time - last_time;
+        if (counter % 1000 == 0) { // 每 1000 次打印一次
+            printf("Cycle time: %llu us\n", cycle_time);
+        }
+        last_time = current_time;
+
         sleepUs(1000);
-        A2lFinalize(); // @@@@ TEST: Manually finalize the A2L file to make it visible without XCP tool connect
     }
 
     // Cleanup
