@@ -1,11 +1,14 @@
 // hello_xcp_cpp - simple xcplib C++ example
 
-#include <array>    // for std::array
-#include <atomic>   // for std::atomic
-#include <csignal>  // for signal handling
-#include <cstdint>  // for uintxx_t
+#include <array>   // for std::array
+#include <atomic>  // for std::atomic
+#include <csignal> // for signal handling
+#include <cstdint> // for uintxx_t
+#include <errno.h>
 #include <iostream> // for std::cout
 #include <optional> // for std::optional
+#include <sys/select.h>
+#include <time.h>
 
 #include "a2l.hpp"    // for xcplib A2l generation application programming interface
 #include "xcplib.hpp" // for xcplib application programming interface
@@ -183,7 +186,7 @@ int main() {
     while (gRun) {
         counter++;
         double voltage = random_number();
-        // double average_voltage = average128->calculate(voltage);
+        double average_voltage = average128->calculate(voltage);
 
         // Once create event "mainloop" and register measurements for the local variables 'voltage' and 'average_voltage' via event 'mainloop'
         // Trigger the event "mainloop" to measure the local variables
@@ -196,7 +199,7 @@ int main() {
         DaqTriggerEvent(mainloop);
 
         // Optional: Trigger the event "average128" to measure the 'FloatingAverage' heap instance 'average128'
-        // DaqTriggerEventExt(average, average128);
+        DaqTriggerEventExt(average, average128);
 
         uint64_t current_time = clockGetUs();
         uint64_t cycle_time = current_time - last_time;

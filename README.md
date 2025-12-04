@@ -87,6 +87,7 @@ For detailed build instructions and troubleshooting, see [Building Documentation
 
 ## Documentation
 
+- **[Design Document](docs/DESIGN.md)** - Core design philosophy, RCU algorithm, and architectural insights
 - **[API Reference](docs/xcplib.md)** - XCP instrumentation API
 - **[Configuration](docs/xcplib_cfg.md)** - Configuration options
 - **[Examples](examples/README.md)** - Example applications and CANape setup
